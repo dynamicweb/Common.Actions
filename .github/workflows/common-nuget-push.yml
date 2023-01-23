@@ -2,6 +2,9 @@ name: Nuget push package
 
 on:
   workflow_call:
+    secrets:
+      NUGETAPI:
+        required: true
 
 jobs:
   build-and-publish:
