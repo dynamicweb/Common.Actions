@@ -4,6 +4,9 @@ on:
   workflow_call:
 
 jobs:
+  call-workflow:
+   uses: ./.github/workflows/common-build.yml
+
   build:
     runs-on: ubuntu-latest
 
