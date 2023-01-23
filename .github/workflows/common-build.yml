@@ -1,14 +1,7 @@
-name: PR Build
+name: Build
 
 on:
   workflow_call:
-    inputs:
-      config-path:
-        required: false
-        type: string
-    secrets:
-      token:
-        required: false
 
 jobs:
   triage:
