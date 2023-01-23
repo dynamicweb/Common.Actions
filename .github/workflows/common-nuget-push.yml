@@ -5,9 +5,10 @@ on:
 
 jobs:
   call-workflow:
-   uses: ./.github/workflows/common-build.yml
+     uses: ./.github/workflows/common-build.yml
 
   build:
+    needs: call-workflow
     runs-on: ubuntu-latest
 
     steps:
