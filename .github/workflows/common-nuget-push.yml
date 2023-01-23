@@ -1,4 +1,4 @@
-name: Nuget push package
+name: Build and push
 
 on:
   workflow_call:
