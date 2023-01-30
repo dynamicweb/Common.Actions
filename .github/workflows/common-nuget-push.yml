@@ -6,7 +6,7 @@ on:
       NUGETAPI:
         required: true
       DW_TOKEN_API:
-        required: true
+        required: false
 env:
   dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
