@@ -6,7 +6,7 @@ on:
       NUGETAPI:
         required: true
 env:
-  dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }},
+  dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
   
 jobs:
