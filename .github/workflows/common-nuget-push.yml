@@ -29,14 +29,8 @@ jobs:
       with:
         nuget-api-key: "${{secrets.NUGETAPI}}"
         publish-dir: "./**" # optional, default is .
-    - uses: octokit/request-action@v2.x
-      id: patch_variable
-      with:
-        route: PATCH /repos/{owner}/{repo}/actions/variables/PRERELEASEVERSION
-        value: '0006' 
-        owner: 'dynamicweb'
-        repo: $dwRepo
+    - run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/CheckoutHandlers.QuickPay/actions/variables/PRERELEASEVERSION -f name='PRERELEASEVERSION' -f value='BESTIHEST' 
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: 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
     #- run: "echo latest release: '${{ steps.get_latest_release.outputs.data }}'"
     #- run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f value='0005'
