@@ -8,6 +8,8 @@ on:
 env:
   dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
+  GITHUB_TOKEN: ${{ secrets.DWTOKEN }}
+  GH_TOKEN: ${{ github.token }}
   
 jobs:
   build-and-publish:
@@ -28,5 +30,3 @@ jobs:
         nuget-api-key: "${{secrets.NUGETAPI}}"
         publish-dir: "./**" # optional, default is .
     - run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f value='0003'
-      env:
-        GITHUB_TOKEN: ${{ secrets.DWTOKEN }}
