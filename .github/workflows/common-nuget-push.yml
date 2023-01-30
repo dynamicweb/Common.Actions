@@ -6,8 +6,7 @@ on:
       NUGETAPI:
         required: true
 env:
-  #packageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION }}
-  dwPackageVersion: 'Alpha-001'
+  dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   
 jobs:
   build-and-publish:
