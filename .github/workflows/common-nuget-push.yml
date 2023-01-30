@@ -9,7 +9,7 @@ env:
   dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
   #GITHUB_TOKEN: ${{ secrets.DWTOKEN }}
-  GH_TOKEN: ${{ secrets.DWTOKEN }}
+  GH_TOKEN: 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
   
 jobs:
   build-and-publish:
