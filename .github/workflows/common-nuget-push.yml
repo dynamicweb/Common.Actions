@@ -21,7 +21,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --version-suffix $packageVersion
+      run: dotnet build --no-restore --version-suffix "Alpha001"
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Push Nuget Packages
