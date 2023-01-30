@@ -30,7 +30,6 @@ jobs:
       with:
         nuget-api-key: "${{secrets.NUGETAPI}}"
         publish-dir: "./**" # optional, default is .
-    - run: gh api
     - run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f name='PRERELEASEVERSION' -f value='BESTIHEST' 
       env:
         GH_TOKEN: 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
