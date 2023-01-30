@@ -6,10 +6,7 @@ on:
       NUGETAPI:
         required: true
 env:
-  
-  prefix: ${{ vars.RELEASEPREFIX }},
-  version: ${{vars.PRERELEASEVERSION}},
-  packageVersion: ${{prefix}}${{version}}
+  packageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION }}
   
 jobs:
   build-and-publish:
