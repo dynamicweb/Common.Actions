@@ -5,11 +5,13 @@ on:
     secrets:
       NUGETAPI:
         required: true
+      DW_TOKEN_API:
+        required: true
 env:
   dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
   #GITHUB_TOKEN: ${{ secrets.DWTOKEN }}
-  GH_TOKEN: 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
+  GH_TOKEN: ${{secrets.DW_TOKEN_API}}
   
 jobs:
   build-and-publish:
