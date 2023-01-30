@@ -5,7 +5,12 @@ on:
     secrets:
       NUGETAPI:
         required: true
-
+env:
+  
+  prefix: ${{ vars.RELEASEPREFIX }},
+  version: ${{vars.PRERELEASEVERSION}},
+  packageVersion: ${{prefix}}${{version}}
+  
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -18,7 +23,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --version-suffix ${{packageVersion}}
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Push Nuget Packages
