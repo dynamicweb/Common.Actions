@@ -6,7 +6,8 @@ on:
       NUGETAPI:
         required: true
 env:
-  packageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION }}
+  #packageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION }}
+  packageVersion: 'Alpha_001'
   
 jobs:
   build-and-publish:
@@ -20,7 +21,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --version-suffix ${{packageVersion}}
+      run: dotnet build --no-restore --version-suffix $packageVersion
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Push Nuget Packages
