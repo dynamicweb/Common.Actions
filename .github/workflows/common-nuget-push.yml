@@ -7,7 +7,7 @@ on:
         required: true
 env:
   #packageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION }}
-  packageVersion: 'Alpha001'
+  packageVersion: '-Alpha-001'
   
 jobs:
   build-and-publish:
