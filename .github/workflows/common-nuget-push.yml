@@ -6,7 +6,8 @@ on:
       NUGETAPI:
         required: true
 env:
-  dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
+  dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }},
+  dwRepo: ${{ github.event.repository.name }}
   
 jobs:
   build-and-publish:
@@ -17,8 +18,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-    #- name: Restore dependencies
-    #  run: dotnet restore
     - name: Build
       run: dotnet build --version-suffix $dwPackageVersion
     - name: Test
@@ -28,4 +27,6 @@ jobs:
       with:
         nuget-api-key: "${{secrets.NUGETAPI}}"
         publish-dir: "./**" # optional, default is .
-        
+    - run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f value='0003'
+      env:
+        GITHUB_TOKEN: ${{ secrets.DWTOKEN }}
