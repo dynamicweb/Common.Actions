@@ -9,7 +9,7 @@ env:
   dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
   #GITHUB_TOKEN: ${{ secrets.DWTOKEN }}
-  GH_TOKEN: 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
+  GH_TOKEN: ${{ secrets.DWTOKEN }}
   
 jobs:
   build-and-publish:
@@ -30,7 +30,7 @@ jobs:
       with:
         nuget-api-key: "${{secrets.NUGETAPI}}"
         publish-dir: "./**" # optional, default is .
-    - run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f name='PRERELEASEVERSION' -f value='BESTIHEST' 
+    - run: echo ${{ secrets.DWTOKEN }} | gh auth login --with-token | gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f name='PRERELEASEVERSION' -f value='BESTIHEST' 
     #  env:
     #    GH_TOKEN: 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
     #- run: "echo latest release: '${{ steps.get_latest_release.outputs.data }}'"
