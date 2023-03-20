@@ -2,6 +2,11 @@ name: Sync Pull Request to Azure Boards
 
 on:
   workflow_call:
+    secrets:
+      ADO_PR:
+        required: true
+      GH_PR:
+        required: true
 
 jobs:
   alert:
