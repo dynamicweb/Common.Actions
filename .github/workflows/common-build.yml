@@ -17,7 +17,7 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release --version-suffix $NOW
+      run: dotnet build --no-restore --configuration Release --version-suffix ${{ github.event.number }}
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Push Nuget Packages to DEV feed
