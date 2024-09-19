@@ -2,9 +2,6 @@ name: Build
 
 on:
   workflow_call:
-      secrets:
-        DEVNUGETAPI:
-          required: true
 
 jobs:
   Build:
@@ -26,6 +23,5 @@ jobs:
     - name: Push Nuget Packages to DEV feed
       uses: EasyDesk/action-nuget-push@v1.0.0
       with:
-        nuget-api-key: "${{secrets.DEVNUGETAPI}}"
         publish-dir: "./**" # optional, default is .
         nuget-url: 'http://feed.dw-i001.nuget.dynamicweb-cms.com/v3/index.json'
