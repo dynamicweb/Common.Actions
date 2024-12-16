@@ -20,8 +20,8 @@ jobs:
       run: dotnet build --no-restore --configuration Release --version-suffix ${{ github.event.number }}
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Push Nuget Packages to DEV feed
-      uses: EasyDesk/action-nuget-push@v1.0.0
-      with:
-        publish-dir: "./**" # optional, default is .
-        nuget-url: 'http://feed.dw-i001.nuget.dynamicweb-cms.com/v3/index.json'
+    #- name: Push Nuget Packages to DEV feed
+    #  uses: EasyDesk/action-nuget-push@v1.0.0
+    #  with:
+    #    publish-dir: "./**" # optional, default is .
+    #    nuget-url: 'http://feed.dw-i001.nuget.dynamicweb-cms.com/v3/index.json'
