@@ -8,7 +8,6 @@ on:
       DW_TOKEN_API:
         required: false
 env:
-  dwPackageVersion: ${{ format('{0}{1}', vars.RELEASEPREFIX, vars.PRERELEASEVERSION) }}
   dwRepo: ${{ github.event.repository.name }}
   GH_TOKEN: ${{secrets.DW_TOKEN_API}}
   
@@ -36,9 +35,4 @@ jobs:
       with:
         nuget-api-key: "${{secrets.NUGETAPI}}"
         publish-dir: "./**" # optional, default is .
-    #- run:  |
-    #    echo ${{ secrets.DW_TOKEN_API }}
-    #    gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/${{ github.event.repository.name }}/actions/variables/PRERELEASEVERSION -f name='PRERELEASEVERSION' -f value='SETMEGODGODDAMMIT' 
-    #  env:
-    #    GH_TOKEN: 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
-    #- run: gh api --method PATCH -H "Accept:application/vnd.github+json" /repos/dynamicweb/$dwRepo/actions/variables/PRERELEASEVERSION -f value='0005'
+    
