@@ -2,6 +2,9 @@ name: Build
 
 on:
   workflow_call:
+    secrets:
+      DYNAMICWEB_NUGET_API_KEY:
+        required: true
 
 permissions:
   contents: read
@@ -13,16 +16,11 @@ env:
   PRIVATE_NUGET_FEED_URL: 'https://core.nuget.dynamicweb-cms.com/v3/index.json'
   PRIVATE_NUGET_FEED_API_KEY: ${{ secrets.DYNAMICWEB_NUGET_API_KEY }}
 
-   --api-key "$LOCAL_FEED_API" --skip-duplicate
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
-    - uses: actions/checkout@v4
-
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
