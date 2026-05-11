@@ -2,26 +2,105 @@ name: Build
 
 on:
   workflow_call:
+    secrets:
+      DYNAMICWEB_NUGET_API_KEY:
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+env:
+  PROJECT_PATH: '**/*.csproj'
+  PRIVATE_NUGET_FEED_URL: 'https://core.nuget.dynamicweb-cms.com/v3/index.json'
+  PRIVATE_NUGET_FEED_API_KEY: ${{ secrets.DYNAMICWEB_NUGET_API_KEY }}
 
 jobs:
-  Build:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - name: Set current date as env variable
-      run: echo "NOW=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
-    - uses: actions/checkout@v3
+    
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
+    
     - name: Restore dependencies
       run: dotnet restore
+    
     - name: Build
-      run: dotnet build --no-restore --configuration Release --version-suffix ${{ github.event.number }}
+      run: dotnet build --no-restore --configuration Release
+    
     - name: Test
-      run: dotnet test --no-build --verbosity normal
-    #- name: Push Nuget Packages to DEV feed
-    #  uses: EasyDesk/action-nuget-push@v1.0.0
-    #  with:
-    #    publish-dir: "./**" # optional, default is .
-    #    nuget-url: 'http://feed.dw-i001.nuget.dynamicweb-cms.com/v3/index.json'
+      run: dotnet test --no-build --configuration Release --verbosity normal --logger trx --results-directory ./test-results
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: ./test-results/*.trx
+  build-and-publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Generate prerelease version
+      id: version
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        RUN_NUMBER=${{ github.run_number }}
+        
+        # Use dotnet to evaluate the VersionPrefix property
+        BASE_VERSION=$(dotnet msbuild ${{ env.PROJECT_PATH }} -getProperty:VersionPrefix -nologo)
+        
+        if [ -z "$BASE_VERSION" ]; then
+          echo "Error: Could not extract VersionPrefix from ${{ env.PROJECT_PATH }}"
+          exit 1
+        fi
+        
+        PRERELEASE_VERSION="${BASE_VERSION}-pr${PR_NUMBER}.${RUN_NUMBER}"
+        echo "prerelease_version=${PRERELEASE_VERSION}" >> $GITHUB_OUTPUT
+        echo "Extracted base version: ${BASE_VERSION}"
+        echo "Generated prerelease version: ${PRERELEASE_VERSION}"
+        
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+      
+    - name: Pack NuGet package
+      run: |
+        dotnet pack ${{ env.PROJECT_PATH }} \
+          --no-build \
+          --configuration Release \
+          --output ./artifacts \
+          -p:PackageVersion=${{ steps.version.outputs.prerelease_version }} \
+          -p:VersionSuffix=""
+      
+    - name: Push to Dynamicweb NuGet feed
+      run: |
+        dotnet nuget push ./artifacts/*.nupkg \
+          --api-key ${{ secrets.DYNAMICWEB_NUGET_API_KEY }} \
+          --source ${{ env.PRIVATE_NUGET_FEED_URL }} \
+          --skip-duplicate
+      
+    - name: Upload package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: nuget-package-pr${{ github.event.pull_request.number }}
+        path: ./artifacts/*.nupkg
