@@ -45,8 +45,14 @@ jobs:
         # Use dotnet to evaluate the VersionPrefix property
         BASE_VERSION=$(dotnet msbuild ${{ env.PROJECT_PATH }} -getProperty:VersionPrefix -nologo)
         
+        # If VersionPrefix is empty, try Version property
         if [ -z "$BASE_VERSION" ]; then
-          echo "Error: Could not extract VersionPrefix from ${{ env.PROJECT_PATH }}"
+          BASE_VERSION=$(dotnet msbuild ${{ env.PROJECT_PATH }} -getProperty:Version -nologo)
+        fi
+        
+        # Fail only if both properties are empty
+        if [ -z "$BASE_VERSION" ]; then
+          echo "Error: Could not extract VersionPrefix or Version from ${{ env.PROJECT_PATH }}"
           exit 1
         fi
         
