@@ -5,6 +5,8 @@ on:
     secrets:
       NUGETAPI:
         required: true
+      NUGETUSER:
+        required: true
       DW_TOKEN_API:
         required: false
 env:
@@ -30,9 +32,9 @@ jobs:
       run: dotnet build
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Push Nuget Packages
-      uses: EasyDesk/action-nuget-push@v1.0.0
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: login
       with:
-        nuget-api-key: "${{secrets.NUGETAPI}}"
-        publish-dir: "./**" # optional, default is .
+        user: ${{ secrets.NUGETUSER }}
     
